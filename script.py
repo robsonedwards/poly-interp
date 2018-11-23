@@ -16,8 +16,12 @@ def f(x):
     return (1 - x ** 3) * np.sin(2 * np.pi * x)
 
 def get_poly_interpolant(X, Y):
-    # Returns a polynomial interpolant for data points (X, Y)
-    # TODO: improve documentation 
+    # Returns a polynomial interpolant for diven data points
+    # Args:
+    #   X: list of x's (knots)
+    #   Y: list of corresponding y's. That is, Y[i] = f(X[i]) for all i. 
+    # Returns:
+    #   a FUNCTION which is the polynomial interpolant of degree (len(X) - 1)
     if len(X) != len(Y) :
         raise ValueError("X and Y must have the same length.")
     n = len(X) - 1
@@ -27,7 +31,7 @@ def get_poly_interpolant(X, Y):
     A = V.I.dot(Y) # Coefficients for polynomial 
     def interpolant(w): 
         w_exps = np.matrix([w ** i for i in range(n+1)]) # [1, w, w ** 2, ...]
-        return w_exps.dot(A)[0, 0]
+        return w_exps.dot(A)[0, 0] # w_exps.dot(A) is a 1 x 1 matrix
     return interpolant
 
 X = np.linspace(0, 2, num = 201)
@@ -47,7 +51,7 @@ plt.plot(X, P)
 
 breaks = np.linspace(0, 2, num = 15)
 p = get_poly_interpolant(breaks, g(breaks))
-P = [p(x) for x in X] # TODO: Why is this so awful (and so good in the middle)
+#P = [p(x) for x in X] # TODO: Why is this so awful (and so good in the middle)
 plt.plot(X, P)
 
 plt.show()
