@@ -51,7 +51,61 @@ def get_breaks_cheb(start, stop, n):
     roots = scale(roots)
     return roots
 
-def get_Y(X, method, breaks_method, n):
+def B(x, k, a, b, h):
+    return spline_basis(x - (k * h), a, b, h)
+
+
+def get_F(Y, h):
+    # This comes from sec 3.5.3.2 in the module notes. 
+    n = len(Y) - 1
+    F = [Y[0] / (h ** 3),]
+    for y in Y[1:n]:
+        F = F + [y * 6 / (h ** 3),]
+    F = F + [Y[-1] / (h ** 3),]
+    return np.transpose(np.matrix(F))
+
+def get_M(n):
+    # This comes from identity 3.10 in the module notes. 
+    M = [[1,] + [0 for i in range(n)],]
+    for i in range(1, n):
+        M = M + [[0 for i in range(i-1)] + [1, 4, 1] + [0 for i in range(n-i-1)]]
+    M = M + [[0 for i in range(n)] + [1,]]
+    return np.matrix(M)
+
+def spline_basis(x, a, b, h):
+    # This comes from section 3.5.3.2 in the module notes. 
+    if x - a < -2 * h: 
+        return 0
+    if x - a < -h: 
+        return (1 / 6) * ((2 * h + (x - a)) ** 3)
+    if x - a < 0:
+        return (2 * (h ** 3) / 3) - (1 / 2) * ((x - a) ** 2) * (2 * h + (x - a))
+    if x - a < h:
+        return (2 * (h ** 3) / 3) - (1 / 2) * ((x - a) ** 2) * (2 * h - (x - a))
+    if x - a < 2 * h: 
+        return (1 / 6) * ((2 * h - (x - a)) ** 3)
+    return 0
+
+def get_spline_interpolant(X, Y):
+    if len(X) != len(Y) :
+        raise ValueError("X and Y must have the same length.")
+    n = len(X) - 1
+    a = X[0]
+    b = X[-1]
+    h = (b - a) / n
+    # The following come from identity 3.10 and sec 3.5.3.2 in the module notes. 
+    F = get_F(Y, h)
+    M = get_M(n)
+    A = M.I.dot(F)
+    terms = [ lambda x: A[k - 1, 0] * B( x, k, a, b, h ) for k in range(-1, n+2)] 
+        # List of weighted basis functions, which are functions of x
+    def interpolant(w):
+        s = sum([func(w) for func in terms]) 
+            # Sum of weighted basis functions, that is, the interpolant
+        return s
+    return interpolant
+
+def get_Y(X, func, method, breaks_method, n):
     # Gets Y's for plotting via various methods. 
     start = X[0]
     stop = X[-1]
@@ -61,38 +115,55 @@ def get_Y(X, method, breaks_method, n):
     if breaks_method == "cheb":
         breaks = get_breaks_cheb(start, stop, n + 1)
     if method == "poly":
-        p = get_poly_interpolant(breaks, g(breaks))
-    if method == "splines":
-        return
-    P = list(map(p, X))
-    return P
+        interpolant = get_poly_interpolant(breaks, func(breaks))
+    if method == "spline":
+        interpolant = get_spline_interpolant(breaks, func(breaks))
+    Y = list(map(interpolant, X))
+    return Y
 
 X = np.linspace(0, 2, num = 201) # x's for plotting
 
 # Question 1.1 
+print("Question 1.1")
 plt.plot(X, g(X))
 print("blue: \tg")
 
-Y = get_Y(X, "poly", "even", 5)
+Y = get_Y(X, g, "poly", "even", 5)
 plt.plot(X, Y)
 print("yellow:\tp with degree 5, and 6 evenly spaced interp points")
 
-Y = get_Y(X, "poly", "even", 10)
+Y = get_Y(X, g, "poly", "even", 10)
 plt.plot(X, Y)
 print("green:\tp with degree 10, and 11 evenly spaced interp points")
 
 plt.show()
 
-#Question 1.2 
+# Question 1.2 
+print("Question 1.2")
 plt.plot(X, g(X))
 print("blue: \tg")
 
-Y = get_Y(X, "poly", "cheb", 5)
+Y = get_Y(X, g, "poly", "cheb", 5)
 plt.plot(X, Y)
-print("green:\tp with degree 5, and 6 Chebyshev interp points")
+print("yellow:\tp with degree 5, and 6 Chebyshev interp points")
 
-Y = get_Y(X, "poly", "cheb", 10)
+Y = get_Y(X, g, "poly", "cheb", 10)
 plt.plot(X, Y)
 print("green:\tp with degree 10, and 11 Chebyshev interp points")
+
+plt.show()
+
+# Question 1.3
+print("Question 1.3")
+plt.plot(X, g(X))
+print("blue: \tg")
+
+Y = get_Y(X, g, "spline", "even", 5)
+plt.plot(X, Y)
+print("yellow:\tCubic spline from 6 evenly spaced interp points")
+
+Y = get_Y(X, g, "spline", "even", 10)
+plt.plot(X, Y)
+print("green:\tCubic spline from 11 evenly spaced interp points")
 
 plt.show()
