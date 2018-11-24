@@ -44,16 +44,16 @@ def get_breaks_cheb(start, stop, n):
     # Gets n break points between start and stop, according to the method for
     # minimising error bound by Chebyshev polynomials in module notes 3.4.1. 
     c = [0 for i in range(n)] + [1,] 
-        # List of the form [0, 0, ..., 0, 1] which represents T_n
+        # List of the form [0, 0, ..., 0, 1], with n 0's, which represents T_n
     roots = cheb.chebroots(c)
     def scale (r):
         return (r * (stop - start) / 2) + ((start + stop) / 2)
     roots = scale(roots)
     return roots
 
-def B(x, k, a, b, h):
-    return spline_basis(x - (k * h), a, b, h)
-
+def B(x, k, a, h):
+    # Cubic B-Spline Basis Function
+    return spline_basis(x - (k * h), a, h)
 
 def get_F(Y, h):
     # This comes from sec 3.5.3.2 in the module notes. 
@@ -72,7 +72,7 @@ def get_M(n):
     M = M + [[0 for i in range(n)] + [1,]]
     return np.matrix(M)
 
-def spline_basis(x, a, b, h):
+def spline_basis(x, a, h):
     # This comes from section 3.5.3.2 in the module notes. 
     if x - a < -2 * h: 
         return 0
@@ -93,14 +93,21 @@ def get_spline_interpolant(X, Y):
     a = X[0]
     b = X[-1]
     h = (b - a) / n
+    #print("n: {} a: {} b: {} h: {}".format(n, a, b, h))
     # The following come from identity 3.10 and sec 3.5.3.2 in the module notes. 
     F = get_F(Y, h)
     M = get_M(n)
     A = M.I.dot(F)
-    terms = [ lambda x: A[k - 1, 0] * B( x, k, a, b, h ) for k in range(-1, n+2)] 
-        # List of weighted basis functions, which are functions of x
+    A = [A[k, 0] for k in range(n+1)]
+    A = [2 * A[0] - A[1]] + A + [2 * A[-1] + A[-2]]
+        # Now A is a list with A[i] = a_i-1 where a_i-1 is the i-1'th coeffnt.
     def interpolant(w):
-        s = sum([func(w) for func in terms]) 
+        s = 0
+        for k in range(-1, n+2):
+            s = s + A[k + 1] * B(w, k, a, h)
+        #terms = [ lambda x: A[k + 1] * B( x, k, a, h ) for k in range(-1, n+2)] 
+             # List of weighted basis functions, which are functions of x
+        #s = sum([func(w) for func in terms]) 
             # Sum of weighted basis functions, that is, the interpolant
         return s
     return interpolant
@@ -117,6 +124,12 @@ def get_Y(X, func, method, breaks_method, n):
     if method == "poly":
         interpolant = get_poly_interpolant(breaks, func(breaks))
     if method == "spline":
+        #global debug_X 
+        #debug_X = breaks
+        #global debug_Y
+        #debug_Y = func(breaks)
+        #print("X = {}".format(debug_X))
+        #print("Y = {}".format(debug_Y))
         interpolant = get_spline_interpolant(breaks, func(breaks))
     Y = list(map(interpolant, X))
     return Y
@@ -154,6 +167,8 @@ print("green:\tp with degree 10, and 11 Chebyshev interp points")
 plt.show()
 
 # Question 1.3
+debug_X, debug_Y = 0, 0
+
 print("Question 1.3")
 plt.plot(X, g(X))
 print("blue: \tg")
@@ -167,3 +182,4 @@ plt.plot(X, Y)
 print("green:\tCubic spline from 11 evenly spaced interp points")
 
 plt.show()
+
