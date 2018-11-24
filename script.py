@@ -10,7 +10,7 @@ Robson Edwards
 import numpy as np
 import matplotlib.pyplot as plt
 import numpy.polynomial.chebyshev as cheb
-import scipy as sp
+import scipy.misc
 import math
 
 def g(x):
@@ -139,7 +139,8 @@ def get_error_bound(space, knots, func):
     n = len(knots) - 1
     bound = 1 / math.factorial(n + 1)
     prods = np.abs([np.prod([x - x_k for x_k in knots]) for x in space])
-    derivs = np.abs([sp.misc.derivative(func, x, n = n + 1) for x in space])
+    derivs = np.abs([scipy.misc.derivative(
+            func, x, dx = 1e-4, n = len(knots)-1, order = len(knots)) for x in space])
     bound = bound * max(prods) * max(derivs)
     return bound
 
@@ -238,6 +239,10 @@ plt.title("Error for these Interpolants")
 plt.legend(handles = [plot_2_1_3, plot_2_1_4])
 showplot()
 
+print("Theoretical error for 2.1, n = 6: {:.2f}. n = 10: {:.2f}.".format(
+        get_error_bound(X, get_breaks_even(-1, 2, 7), f), 
+        get_error_bound(X, get_breaks_even(-1, 2, 11), f) ))
+
 print("Max error for 2.1, n = 6: {:.2f}. n = 10: {:.2f}.".format(
         max(np.abs(f(X) - Y_6)), max(np.abs(f(X) - Y_10))))
 
@@ -262,6 +267,10 @@ plt.title("Error for these Interpolants")
 plt.legend(handles = [plot_2_2_3, plot_2_2_4])
 showplot()
 
+print("Theoretical error for 2.2, n = 6: {:.2f}. n = 10: {:.2f}.".format(
+        get_error_bound(X, get_breaks_cheb(-1, 2, 7), f), 
+        get_error_bound(X, get_breaks_cheb(-1, 2, 11), f) ))
+
 print("Max error for 2.2, n = 6: {:.2f}. n = 10: {:.2f}.".format(
         max(np.abs(f(X) - Y_6)), max(np.abs(f(X) - Y_10))))
 
@@ -285,6 +294,10 @@ plot_2_3_4, = plt.plot(X, np.abs(f(X) - Y_10), label =
 plt.title("Error for these Interpolants")
 plt.legend(handles = [plot_2_3_3, plot_2_3_4])
 showplot()
+
+print("Theoretical error for 2.3, n = 6: {:.2f}. n = 10: {:.2f}.".format(
+        get_error_bound(X, get_breaks_even(-1, 2, 7), f), 
+        get_error_bound(X, get_breaks_even(-1, 2, 11), f) ))
 
 print("Max error for 2.3, n = 6: {:.2f}. n = 10: {:.2f}.".format(
         max(np.abs(f(X) - Y_6)), max(np.abs(f(X) - Y_10))))
