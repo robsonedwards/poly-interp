@@ -10,6 +10,8 @@ Robson Edwards
 import numpy as np
 import matplotlib.pyplot as plt
 import numpy.polynomial.chebyshev as cheb
+import scipy as sp
+import math
 
 def g(x):
     return np.tan(np.sin(x ** 3))
@@ -133,6 +135,14 @@ def get_Y(X, func, method, breaks_method, n):
     Y = list(map(interpolant, X))
     return Y
 
+def get_error_bound(space, knots, func):
+    n = len(knots) - 1
+    bound = 1 / math.factorial(n + 1)
+    prods = np.abs([np.prod([x - x_k for x_k in knots]) for x in space])
+    derivs = np.abs([sp.misc.derivative(func, x, n = n + 1) for x in space])
+    bound = bound * max(prods) * max(derivs)
+    return bound
+
 def showplot():
     dont_save = False # Change this if you want to save pictures.
     if dont_save:
@@ -228,7 +238,7 @@ plt.title("Error for these Interpolants")
 plt.legend(handles = [plot_2_1_3, plot_2_1_4])
 showplot()
 
-print("Max error for 2.1, n = 6: {:.4f}. n = 10: {:.4f}.".format(
+print("Max error for 2.1, n = 6: {:.2f}. n = 10: {:.2f}.".format(
         max(np.abs(f(X) - Y_6)), max(np.abs(f(X) - Y_10))))
 
 # Question 2.2
@@ -252,7 +262,7 @@ plt.title("Error for these Interpolants")
 plt.legend(handles = [plot_2_2_3, plot_2_2_4])
 showplot()
 
-print("Max error for 2.2, n = 6: {:.4f}. n = 10: {:.4f}.".format(
+print("Max error for 2.2, n = 6: {:.2f}. n = 10: {:.2f}.".format(
         max(np.abs(f(X) - Y_6)), max(np.abs(f(X) - Y_10))))
 
 # Question 2.3
@@ -276,5 +286,5 @@ plt.title("Error for these Interpolants")
 plt.legend(handles = [plot_2_3_3, plot_2_3_4])
 showplot()
 
-print("Max error for 2.3, n = 6: {:.4f}. n = 10: {:.4f}.".format(
+print("Max error for 2.3, n = 6: {:.2f}. n = 10: {:.2f}.".format(
         max(np.abs(f(X) - Y_6)), max(np.abs(f(X) - Y_10))))
