@@ -273,7 +273,7 @@ plot_2_3_3, = plt.plot(X, np.abs(f(X) - Y_6), label =
 plot_2_3_4, = plt.plot(X, np.abs(f(X) - Y_10), label = 
                        "$S_{10}$ error", c = "C2")
 plt.title("Error for these Interpolants")
-plt.legend(handles = [plot_2_2_3, plot_2_2_4])
+plt.legend(handles = [plot_2_3_3, plot_2_3_4])
 showplot()
 
 print("Max error for 2.3, n = 6: {:.4f}. n = 10: {:.4f}.".format(
