@@ -134,52 +134,53 @@ def get_Y(X, func, method, breaks_method, n):
     Y = list(map(interpolant, X))
     return Y
 
-X = np.linspace(0, 2, num = 201) # x's for plotting
+X = np.linspace(0, 2, num = 401) # x's for plotting
+figsize = (8, 6)
+saved_imgs = 0
+def showplot():
+    #plt.show()
+    global saved_imgs 
+    saved_imgs = saved_imgs + 1
+    filename = "plot_" + str(saved_imgs) + ".svg"
+    plt.savefig(filename, format = "svg")
+    print("saved plot to " + filename)
+
 
 # Question 1.1 
 print("Question 1.1")
-plt.plot(X, g(X))
-print("blue: \tg")
-
+plt.figure(figsize = figsize)
+plot_g, = plt.plot(X, g(X), label = 'g')
 Y = get_Y(X, g, "poly", "even", 5)
-plt.plot(X, Y)
-print("yellow:\tp with degree 5, and 6 evenly spaced interp points")
-
+plot_1_1_1, = plt.plot(X, Y, label = 
+                     "$P_5$ from 6 evenly-spaced interp points")
 Y = get_Y(X, g, "poly", "even", 10)
-plt.plot(X, Y)
-print("green:\tp with degree 10, and 11 evenly spaced interp points")
-
-plt.show()
+plot_1_1_2, = plt.plot(X, Y, label = 
+                     "$P_{10}$ from 11 Chebyshev interp points")
+plt.legend(handles=[plot_g, plot_1_1_1, plot_1_1_2])
+showplot()
 
 # Question 1.2 
 print("Question 1.2")
-plt.plot(X, g(X))
-print("blue: \tg")
-
+plt.figure(figsize = figsize)
+plot_g, = plt.plot(X, g(X), label = 'g')
 Y = get_Y(X, g, "poly", "cheb", 5)
-plt.plot(X, Y)
-print("yellow:\tp with degree 5, and 6 Chebyshev interp points")
-
+plot_1_2_1, = plt.plot(X, Y, label = 
+                      "$P_5$ from 6 Chebyshev interp points")
 Y = get_Y(X, g, "poly", "cheb", 10)
-plt.plot(X, Y)
-print("green:\tp with degree 10, and 11 Chebyshev interp points")
-
-plt.show()
+plot_1_2_2, = plt.plot(X, Y, label = 
+                       "$P_{10}$ from 11 Chebyshev interp points")
+plt.legend(handles=[plot_g, plot_1_2_1, plot_1_2_2])
+showplot()
 
 # Question 1.3
-debug_X, debug_Y = 0, 0
-
 print("Question 1.3")
-plt.plot(X, g(X))
-print("blue: \tg")
-
+plt.figure(figsize=figsize)
+plot_g, = plt.plot(X, g(X), label = 'g')
 Y = get_Y(X, g, "spline", "even", 5)
-plt.plot(X, Y)
-print("yellow:\tCubic spline from 6 evenly spaced interp points")
-
+plot_1_3_1, = plt.plot(X, Y, label = 
+                       "$S_5$ from 6 points")
 Y = get_Y(X, g, "spline", "even", 10)
-plt.plot(X, Y)
-print("green:\tCubic spline from 11 evenly spaced interp points")
-
-plt.show()
-
+plot_1_3_2, = plt.plot(X, Y, label = 
+                      "$S_{10}$ from 11 points")
+plt.legend(handles=[plot_g, plot_1_3_1, plot_1_3_2])
+showplot()
