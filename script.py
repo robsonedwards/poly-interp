@@ -31,6 +31,9 @@ def get_poly_interpolant(X, Y):
     V = np.matrix ( [[x ** i for i in range(n+1)] for x in X] )# Vandermonde Mtx
     Y = np.transpose(np.matrix(Y))
     A = V.I.dot(Y) # Coefficients for polynomial 
+    #for i in range(0, n):
+    #    print("{:.2f}x^{} + ".format(float(A[n - i, 0]), n - i))
+    #print("{:.2f}".format(float(A[0, 0])))
     def interpolant(w): 
         w_exps = np.matrix([w ** i for i in range(n+1)]) # [1, w, w ** 2, ...]
         return w_exps.dot(A)[0, 0] # w_exps.dot(A) is a 1 x 1 matrix
@@ -158,12 +161,10 @@ plt.legend(handles = [plot_g, plot_1_1_1, plot_1_1_2])
 showplot()
 
 plt.figure(figsize = figsize)
-plot_1_1_3, = plt.plot(X, np.abs(Y_5 - g(X)), label = "$P_5$ error", c = "C1")
-plot_1_1_4, = plt.plot(X, np.abs(Y_10 - g(X)), label = "$P_{10}$ error", c = "C2")
-plot_1_1_5, = plt.plot(X, np.abs(np.array(Y_10) - Y_5), label = 
+plot_1_1_3, = plt.plot(X, np.abs(np.array(Y_10) - Y_5), label = 
                        "$|P_5 - P_{10}|$", c = "C3")
-plt.title("Errors for these Interpolants")
-plt.legend(handles = [plot_1_1_3, plot_1_1_4, plot_1_1_5])
+plt.title("Difference between these Interpolants")
+plt.legend(handles = [plot_1_1_3])
 showplot()
 
 # Question 1.2 
@@ -179,10 +180,10 @@ plt.legend(handles=[plot_g, plot_1_2_1, plot_1_2_2])
 showplot()
 
 plt.figure(figsize = figsize)
-plot_1_2_3, = plt.plot(X, np.abs(Y_5 - g(X)), label = "$P_5$ error", c = "C1")
-plot_1_2_4, = plt.plot(X, np.abs(Y_10 - g(X)), label = "$P_{10}$ error", c = "C2")
-plt.title("Errors for these Interpolants")
-plt.legend(handles = [plot_1_2_3, plot_1_2_4])
+plot_1_2_3, = plt.plot(X, np.abs(np.array(Y_10) - Y_5), label = 
+                       "$|P_5 - P_{10}|$", c = "C3")
+plt.title("Difference between these Interpolants")
+plt.legend(handles = [plot_1_2_3])
 showplot()
 
 # Question 1.3
@@ -198,10 +199,10 @@ plt.legend(handles=[plot_g, plot_1_3_1, plot_1_3_2])
 showplot()
 
 plt.figure(figsize = figsize)
-plot_1_3_3, = plt.plot(X, np.abs(Y_5 - g(X)), label = "$S_5$ error", c = "C1")
-plot_1_3_4, = plt.plot(X, np.abs(Y_10 - g(X)), label = "$S_{10}$ error", c = "C2")
-plt.title("Errors for these Interpolants")
-plt.legend(handles = [plot_1_3_3, plot_1_3_4])
+plot_1_3_3, = plt.plot(X, np.abs(np.array(Y_10) - Y_5), label = 
+                       "$|S_5 - S_{10}|$", c = "C3")
+plt.title("Difference between these Interpolants")
+plt.legend(handles = [plot_1_3_3])
 showplot()
 
 
