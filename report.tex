@@ -16,7 +16,7 @@
 
 \title{Project on Polynomial Interpolation}
 \author{Robson Edwards}
-%\date{}							% Activate to display a given date or no date
+\date{November 23, 2018}							% Activate to display a given date or no date
 
 \begin{document}
 
@@ -87,9 +87,33 @@ $f(x) = (1 - x^3)\sin(2 \pi x)$.
 
 \subsection{}
 
-\subsection{}
+We calculate polynomial interpolants as before, except for $f$ and degree $n = 6$ and $n = 10$. We use equally spaced knots. We plot $f$, $P_6$, and $P_{10}$ all on the same graph. We also plot the absolute error between $f$ and $P_6$, and between $f$ and $P_10$. Here, the maximum absolute errors are 4.5955 and 3.4400 for $n = 6$ and $n = 10$, respectively and to four decimal places. The theoretical errors for these situations are... 
+
+Notably, the degree-6 interpolant is particularly bad here. This is because the equally spaced interpolation points we've selected happen to be roots of the function, so the data points the polynomial selection algorithm receives are all of the form $(x_k, 0)$, and hence it naively selects the polynomial $0$. Any lower degree than $n = 6$ would also give a bad interpolant. Even if we had non-zero data points, $f$ oscillates too many times on the interval [1,2] for a lower-degree function to give a good approximation. 
+
+~\\
+
+\includegraphics[width = 7.5cm]{plot_7}
+\includegraphics[width = 7.5cm]{plot_8}
 
 \subsection{}
 
+We calculate polynomial interpolants as in \textbf{\S2.1} but using Chebyshev knots as in \textbf{\S1.2}. We are rewarded with improved maximum errors of 2.0146 and 0.6078 for degree $n = 6$ and $n = 10$, respectively. However, it is still clear that $P_6$ does not have the flexibility required to fit all the oscillations of $f$. 
+
+In this case we would expect theoretical errors of...
+
+~\\
+
+\includegraphics[width = 7.5cm]{plot_9}
+\includegraphics[width = 7.5cm]{plot_10}
+
+\subsection{}
+
+Finally, we calculate cubic spline interpolants as in \textbf{\S1.3} with the interpolation points from \textbf{\S2.1}. Of course, this means our $n = 6$ spline doesn't work at all. The $n = 10$ one works fairly well for almost all of [-1, 2] but gives up towards the end. We have maximum errors of 4.5955 and 2.1381 for $n = 6$ and $n = 10$, respectively. We expect theoretical errors of 
+
+~\\
+
+\includegraphics[width = 7.5cm]{plot_11}
+\includegraphics[width = 7.5cm]{plot_12}
 
 \end{document}  
