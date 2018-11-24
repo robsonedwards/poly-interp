@@ -156,7 +156,7 @@ Y_5 = get_Y(X, g, "poly", "even", 5)
 plot_1_1_1, = plt.plot(X, Y_5, label =  "$P_5$")
 Y_10 = get_Y(X, g, "poly", "even", 10)
 plot_1_1_2, = plt.plot(X, Y_10, label =  "$P_{10}$")
-plt.title("Polynomial Interpolants for $g$ (even)")
+plt.title("Polynomial Interpolants for $g$ (Equal)")
 plt.legend(handles = [plot_g, plot_1_1_1, plot_1_1_2])
 showplot()
 
@@ -203,6 +203,69 @@ plot_1_3_3, = plt.plot(X, np.abs(np.array(Y_10) - Y_5), label =
                        "$|S_5 - S_{10}|$", c = "C3")
 plt.title("Difference between these Interpolants")
 plt.legend(handles = [plot_1_3_3])
+showplot()
+
+# Question 2.1
+print("Question 2.1")
+plt.figure(figsize = figsize)
+plot_f, = plt.plot(X, f(X), label = "$f$")
+Y_6 = get_Y(X, f, "poly", "even", 6)
+plot_2_1_1, = plt.plot(X, Y_6, label =  "$P_6$")
+Y_10 = get_Y(X, f, "poly", "even", 10)
+plot_2_1_2, = plt.plot(X, Y_10, label =  "$P_{10}$")
+plt.title("Polynomial Interpolants for $f$ (Equal)")
+plt.legend(handles = [plot_f, plot_2_1_1, plot_2_1_2])
+showplot()
+
+plt.figure(figsize = figsize)
+plot_2_1_3, = plt.plot(X, np.abs(f(X) - Y_6), label = 
+                       "$P_6$ error", c = "C1")
+plot_2_1_4, = plt.plot(X, np.abs(f(X) - Y_10), label = 
+                       "$P_{10}$ error", c = "C2")
+plt.title("Error for these Interpolants")
+plt.legend(handles = [plot_2_1_3, plot_2_1_4])
+showplot()
+
+# Question 2.2
+print("Question 2.2")
+plt.figure(figsize = figsize)
+plot_f, = plt.plot(X, f(X), label = "$f$")
+Y_6 = get_Y(X, f, "poly", "cheb", 6)
+plot_2_2_1, = plt.plot(X, Y_6, label =  "$P_6$")
+Y_10 = get_Y(X, f, "poly", "cheb", 10)
+plot_2_2_2, = plt.plot(X, Y_10, label =  "$P_{10}$")
+plt.title("Polynomial Interpolants for $f$ (Chebyshev)")
+plt.legend(handles = [plot_f, plot_2_2_1, plot_2_2_2])
+showplot()
+
+plt.figure(figsize = figsize)
+plot_2_2_3, = plt.plot(X, np.abs(f(X) - Y_6), label = 
+                       "$P_6$ error", c = "C1")
+plot_2_2_4, = plt.plot(X, np.abs(f(X) - Y_10), label = 
+                       "$P_{10}$ error", c = "C2")
+plt.title("Error for these Interpolants")
+plt.legend(handles = [plot_2_2_3, plot_2_2_4])
+showplot()
+
+# Question 2.3
+print("Question 2.3")
+plt.figure(figsize=figsize)
+plot_f, = plt.plot(X, f(X), label = "$f$")
+Y_6 = get_Y(X, f, "spline", "even", 6)
+plot_2_3_1, = plt.plot(X, Y_5, label =  "$S_5$")
+Y_10 = get_Y(X, f, "spline", "even", 10)
+plot_2_3_2, = plt.plot(X, Y_10, label =  "$S_{10}$")
+plt.title("Cubic Spline Interpolants for $f$")
+plt.legend(handles=[plot_f, plot_2_3_1, plot_2_3_2])
+showplot()
+
+plt.figure(figsize = figsize)
+plot_2_3_3, = plt.plot(X, np.abs(f(X) - Y_6), label = 
+                       "$S_6$ error", c = "C1")
+plot_2_3_4, = plt.plot(X, np.abs(f(X) - Y_10), label = 
+                       "$S_{10}$ error", c = "C2")
+plt.title("Error for these Interpolants")
+plt.legend(handles = [plot_2_2_3, plot_2_2_4])
 showplot()
 
 
