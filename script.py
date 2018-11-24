@@ -144,7 +144,7 @@ def get_error_bound(space, knots, func):
     return bound
 
 def showplot():
-    dont_save = False # Change this if you want to save pictures.
+    dont_save = True # Change this if you want to save pictures.
     if dont_save:
         plt.show()
     else:
