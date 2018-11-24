@@ -26,20 +26,64 @@
 \section{}
 
 We consider the function $g: [0, 2] \rightarrow \mathbb{R}$ defined by
-%\begin{eqnarray*}
 $g(x) = \tan(\sin(x^3))$.
-%\end{eqnarray*}
-\subsection{}
-
-We 
-
-\includegraphics[width = 8cm]{plot_1}
 
 \subsection{}
 
+We compute the interpolating polynomials of degree $n = 5$ and $n = 10$ for equally spaced interpolation points. We use the method laid out in the module notes \S 3.4 (see also attached Python script). We find the polynomial interpolants $P_5$ and $P_{10}$ to be, to two decimal places,
+\\
+
+\begin{tabular}{l c l}
+$P_5$ & $=$ & $13.82x^5 -62.10x^4 + 94.02x^3 -55.28x^2 + 10.85x$ \\
+$P_{10}$ & $=$ &
+$92.73x^{10} -908.43x^9 + 3781.24x^8 -8734.57x^7 + 12281.56x^6$ \\
+& & $-10851.53x^5 + 5993.46x^4 -1979.81x^3 + 351.53x^2  -25.08x  $.
+\end{tabular}
+\\
+\flushleft
+We plot the interpolants $P_5$ and $P_{10}$, along with $g$, on the left-hand graph below. Note that in a ``real'' situation where we would be using a polynomial approximation to this function, we would likely not have access to the exact function $g$. It is included here only as a guide for the eye. 
+
+On the right-hand plot below, we graph the absolute difference $|P_5-P_{10}|$. We can use this difference as a (very) rough estimate of the level of error in the interpolants, assuming $g$ is not available. Because $P_5$ shares its six interpolation points with $P_{10}$, this is a better estimate than it would be for e.g. two polynomial interpolants of degree 6 and 10. One must note that $P_5$ and $P_{10}$ appear to be better approximations within roughly [0.4, 1.6], and worse approximations outwith that interval. We will see that using a better method for selecting interpolation points will improve this issue somewhat. 
+
+~\\
+
+\includegraphics[width = 7.5cm]{plot_1}
+\includegraphics[width = 7.5cm]{plot_2}
+
 \subsection{}
+
+We compute and graph interpolating polynomials as before, but this time we select interpolation points by the roots of the appropriate Chebyshev polynomial, according to the method in the notes \S 3.4.1. As noted earlier, we have managed to improve the difference significantly across the entire interval [0, 2], although the effect is more pronounced on [0, 0.4] than it is on [1.6, 2]. I suspect this is due to the fact that $g''$ is greater in the latter interval than the former. Regardless, we infer that we have improved the accuracy. 
+
+~\\
+
+
+\begin{tabular}{l c l}
+$P_5$ & $=$ & $12.04x^5 -52.22x^4 + 75.31x^3 -41.21x^2 + 7.66x -0.22$ \\
+$P_{10}$ & $=$ &
+$2.76x^{10} -31.07x^9 + 132.97x^8 -283.79x^7 + 328.83x^6 
+$ \\
+& & $-211.39x^5 + 74.17x^4 -12.46x^3 + 1.15x^2 -0.04x$.
+\end{tabular}
+\\
+\flushleft
+
+\includegraphics[width = 7.5cm]{plot_3}
+\includegraphics[width = 7.5cm]{plot_4}
+
+\subsection{}
+
+We compute and graph cubic spline interpolants using the same equally spaced interpolation points as in  \textbf{\S1.1}. We follow the method from notes \S3.5.3. The expressions for these interpolants are far too long to write out here. It can be seen from both graphs that we have further improved the accuracy of the approximations. 
+ 
+ ~\\
+
+\includegraphics[width = 7.5cm]{plot_5}
+\includegraphics[width = 7.5cm]{plot_6}
+
 
 \section{}
+
+We now consider the function $f: [-1, 2] \rightarrow \mathbb{R}$ defined by
+$f(x) = (1 - x^3)\sin(2 \pi x)$.
 
 \subsection{}
 
