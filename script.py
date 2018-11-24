@@ -226,6 +226,9 @@ plt.title("Error for these Interpolants")
 plt.legend(handles = [plot_2_1_3, plot_2_1_4])
 showplot()
 
+print("Max error for 2.1, n = 6: {:.4f}. n = 10: {:.4f}.".format(
+        max(np.abs(f(X) - Y_6)), max(np.abs(f(X) - Y_10))))
+
 # Question 2.2
 print("Question 2.2")
 plt.figure(figsize = figsize)
@@ -247,6 +250,10 @@ plt.title("Error for these Interpolants")
 plt.legend(handles = [plot_2_2_3, plot_2_2_4])
 showplot()
 
+print("Max error for 2.2, n = 6: {:.4f}. n = 10: {:.4f}.".format(
+        max(np.abs(f(X) - Y_6)), max(np.abs(f(X) - Y_10))))
+
+
 # Question 2.3
 print("Question 2.3")
 plt.figure(figsize=figsize)
@@ -267,5 +274,8 @@ plot_2_3_4, = plt.plot(X, np.abs(f(X) - Y_10), label =
 plt.title("Error for these Interpolants")
 plt.legend(handles = [plot_2_2_3, plot_2_2_4])
 showplot()
+
+print("Max error for 2.3, n = 6: {:.4f}. n = 10: {:.4f}.".format(
+        max(np.abs(f(X) - Y_6)), max(np.abs(f(X) - Y_10))))
 
 
