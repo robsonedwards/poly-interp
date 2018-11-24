@@ -206,6 +206,8 @@ plt.legend(handles = [plot_1_3_3])
 showplot()
 
 # Question 2.1
+X = np.linspace(-1, 2, num = 301) # x's for plotting
+
 print("Question 2.1")
 plt.figure(figsize = figsize)
 plot_f, = plt.plot(X, f(X), label = "$f$")
@@ -253,13 +255,12 @@ showplot()
 print("Max error for 2.2, n = 6: {:.4f}. n = 10: {:.4f}.".format(
         max(np.abs(f(X) - Y_6)), max(np.abs(f(X) - Y_10))))
 
-
 # Question 2.3
 print("Question 2.3")
 plt.figure(figsize=figsize)
 plot_f, = plt.plot(X, f(X), label = "$f$")
 Y_6 = get_Y(X, f, "spline", "even", 6)
-plot_2_3_1, = plt.plot(X, Y_5, label =  "$S_5$")
+plot_2_3_1, = plt.plot(X, Y_6, label =  "$S_6$")
 Y_10 = get_Y(X, f, "spline", "even", 10)
 plot_2_3_2, = plt.plot(X, Y_10, label =  "$S_{10}$")
 plt.title("Cubic Spline Interpolants for $f$")
@@ -277,5 +278,3 @@ showplot()
 
 print("Max error for 2.3, n = 6: {:.4f}. n = 10: {:.4f}.".format(
         max(np.abs(f(X) - Y_6)), max(np.abs(f(X) - Y_10))))
-
-
