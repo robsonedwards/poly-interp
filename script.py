@@ -135,52 +135,49 @@ def get_Y(X, func, method, breaks_method, n):
     return Y
 
 X = np.linspace(0, 2, num = 401) # x's for plotting
-figsize = (8, 6)
+figsize = (4, 2.8)
 saved_imgs = 0
 def showplot():
     #plt.show()
     global saved_imgs 
     saved_imgs = saved_imgs + 1
-    filename = "plot_" + str(saved_imgs) + ".svg"
-    plt.savefig(filename, format = "svg")
+    filename = "figures/plot_" + str(saved_imgs) + ".png"
+    plt.savefig(filename, format = "png", dpi = 300)
     print("saved plot to " + filename)
 
 
 # Question 1.1 
 print("Question 1.1")
 plt.figure(figsize = figsize)
-plot_g, = plt.plot(X, g(X), label = 'g')
+plot_g, = plt.plot(X, g(X), label = "$g$")
 Y = get_Y(X, g, "poly", "even", 5)
-plot_1_1_1, = plt.plot(X, Y, label = 
-                     "$P_5$ from 6 evenly-spaced interp points")
+plot_1_1_1, = plt.plot(X, Y, label =  "$P_5$")
 Y = get_Y(X, g, "poly", "even", 10)
-plot_1_1_2, = plt.plot(X, Y, label = 
-                     "$P_{10}$ from 11 Chebyshev interp points")
+plot_1_1_2, = plt.plot(X, Y, label =  "$P_{10}$")
+plt.title("Polynomial Interpolants for $g$ (even)")
 plt.legend(handles=[plot_g, plot_1_1_1, plot_1_1_2])
 showplot()
 
 # Question 1.2 
 print("Question 1.2")
 plt.figure(figsize = figsize)
-plot_g, = plt.plot(X, g(X), label = 'g')
+plot_g, = plt.plot(X, g(X), label = "$g$")
 Y = get_Y(X, g, "poly", "cheb", 5)
-plot_1_2_1, = plt.plot(X, Y, label = 
-                      "$P_5$ from 6 Chebyshev interp points")
+plot_1_2_1, = plt.plot(X, Y, label = "$P_5$")
 Y = get_Y(X, g, "poly", "cheb", 10)
-plot_1_2_2, = plt.plot(X, Y, label = 
-                       "$P_{10}$ from 11 Chebyshev interp points")
+plot_1_2_2, = plt.plot(X, Y, label =  "$P_{10}$")
+plt.title("Polynomial Interpolants for $g$ (Chebyshev)")
 plt.legend(handles=[plot_g, plot_1_2_1, plot_1_2_2])
 showplot()
 
 # Question 1.3
 print("Question 1.3")
 plt.figure(figsize=figsize)
-plot_g, = plt.plot(X, g(X), label = 'g')
+plot_g, = plt.plot(X, g(X), label = "$g$")
 Y = get_Y(X, g, "spline", "even", 5)
-plot_1_3_1, = plt.plot(X, Y, label = 
-                       "$S_5$ from 6 points")
+plot_1_3_1, = plt.plot(X, Y, label =  "$S_5$")
 Y = get_Y(X, g, "spline", "even", 10)
-plot_1_3_2, = plt.plot(X, Y, label = 
-                      "$S_{10}$ from 11 points")
+plot_1_3_2, = plt.plot(X, Y, label =  "$S_{10}$")
+plt.title("Cubic Spline Interpolants for $g$")
 plt.legend(handles=[plot_g, plot_1_3_1, plot_1_3_2])
 showplot()
