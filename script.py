@@ -36,6 +36,34 @@ def get_poly_interpolant(X, Y):
         return w_exps.dot(A)[0, 0] # w_exps.dot(A) is a 1 x 1 matrix
     return interpolant
 
+def get_spline_interpolant(X, Y):
+    # Returns a cubic spline interpolant for diven data points
+    # Args:
+    #   X: list of x's (knots)
+    #   Y: list of corresponding y's. That is, Y[i] = f(X[i]) for all i. 
+    # Returns:
+    #   a FUNCTION which is the cubic spline interpolant of appropriate degree
+    
+    if len(X) != len(Y) :
+        raise ValueError("X and Y must have the same length.")
+    n = len(X) - 1
+    a = X[0]
+    b = X[-1]
+    h = (b - a) / n
+    # The following come from identity 3.10 and sec 3.5.3.2 in the module notes. 
+    F = get_F(Y, h)
+    M = get_M(n)
+    A = M.I.dot(F)
+    A = [A[k, 0] for k in range(n+1)] #Flatten matrix into list
+    A = [2 * A[0] - A[1]] + A + [2 * A[-1] + A[-2]]
+        # Now A is a list with A[i] = a_i-1 where a_i-1 is the i-1'th coeffnt.
+    def interpolant(w):
+        s = 0
+        for k in range(-1, n+2):
+            s = s + A[k + 1] * B(w, k, a, h)
+        return s
+    return interpolant
+
 def get_breaks_even(start, stop, n):
     # Gets n evenly spaced break points between start and stop, inclusive. 
     return np.linspace(start, stop, n)
@@ -56,7 +84,7 @@ def B(x, k, a, h):
     return spline_basis(x - (k * h), a, h)
 
 def get_F(Y, h):
-    # This comes from sec 3.5.3.2 in the module notes. 
+    # This comes from section 3.5.3.2 in the module notes. 
     n = len(Y) - 1
     F = [Y[0] / (h ** 3),]
     for y in Y[1:n]:
@@ -86,32 +114,6 @@ def spline_basis(x, a, h):
         return (1 / 6) * ((2 * h - (x - a)) ** 3)
     return 0
 
-def get_spline_interpolant(X, Y):
-    if len(X) != len(Y) :
-        raise ValueError("X and Y must have the same length.")
-    n = len(X) - 1
-    a = X[0]
-    b = X[-1]
-    h = (b - a) / n
-    #print("n: {} a: {} b: {} h: {}".format(n, a, b, h))
-    # The following come from identity 3.10 and sec 3.5.3.2 in the module notes. 
-    F = get_F(Y, h)
-    M = get_M(n)
-    A = M.I.dot(F)
-    A = [A[k, 0] for k in range(n+1)]
-    A = [2 * A[0] - A[1]] + A + [2 * A[-1] + A[-2]]
-        # Now A is a list with A[i] = a_i-1 where a_i-1 is the i-1'th coeffnt.
-    def interpolant(w):
-        s = 0
-        for k in range(-1, n+2):
-            s = s + A[k + 1] * B(w, k, a, h)
-        #terms = [ lambda x: A[k + 1] * B( x, k, a, h ) for k in range(-1, n+2)] 
-             # List of weighted basis functions, which are functions of x
-        #s = sum([func(w) for func in terms]) 
-            # Sum of weighted basis functions, that is, the interpolant
-        return s
-    return interpolant
-
 def get_Y(X, func, method, breaks_method, n):
     # Gets Y's for plotting via various methods. 
     start = X[0]
@@ -124,27 +126,24 @@ def get_Y(X, func, method, breaks_method, n):
     if method == "poly":
         interpolant = get_poly_interpolant(breaks, func(breaks))
     if method == "spline":
-        #global debug_X 
-        #debug_X = breaks
-        #global debug_Y
-        #debug_Y = func(breaks)
-        #print("X = {}".format(debug_X))
-        #print("Y = {}".format(debug_Y))
         interpolant = get_spline_interpolant(breaks, func(breaks))
     Y = list(map(interpolant, X))
     return Y
 
+def showplot():
+    dont_save = False # Change this if you want to save pictures.
+    if dont_save:
+        plt.show()
+    else:
+        global saved_imgs 
+        saved_imgs = saved_imgs + 1
+        filename = "figures/plot_" + str(saved_imgs) + ".png"
+        plt.savefig(filename, format = "png", dpi = 300)
+        print("saved plot to " + filename)
+
 X = np.linspace(0, 2, num = 401) # x's for plotting
 figsize = (4, 2.8)
 saved_imgs = 0
-def showplot():
-    #plt.show()
-    global saved_imgs 
-    saved_imgs = saved_imgs + 1
-    filename = "figures/plot_" + str(saved_imgs) + ".png"
-    plt.savefig(filename, format = "png", dpi = 300)
-    print("saved plot to " + filename)
-
 
 # Question 1.1 
 print("Question 1.1")
@@ -161,8 +160,10 @@ showplot()
 plt.figure(figsize = figsize)
 plot_1_1_3, = plt.plot(X, np.abs(Y_5 - g(X)), label = "$P_5$ error", c = "C1")
 plot_1_1_4, = plt.plot(X, np.abs(Y_10 - g(X)), label = "$P_{10}$ error", c = "C2")
+plot_1_1_5, = plt.plot(X, np.abs(np.array(Y_10) - Y_5), label = 
+                       "$|P_5 - P_{10}|$", c = "C3")
 plt.title("Errors for these Interpolants")
-plt.legend(handles = [plot_1_1_3, plot_1_1_4])
+plt.legend(handles = [plot_1_1_3, plot_1_1_4, plot_1_1_5])
 showplot()
 
 # Question 1.2 
@@ -200,7 +201,7 @@ plt.figure(figsize = figsize)
 plot_1_3_3, = plt.plot(X, np.abs(Y_5 - g(X)), label = "$S_5$ error", c = "C1")
 plot_1_3_4, = plt.plot(X, np.abs(Y_10 - g(X)), label = "$S_{10}$ error", c = "C2")
 plt.title("Errors for these Interpolants")
-plt.legend(handles = [plot_1_1_3, plot_1_1_4])
+plt.legend(handles = [plot_1_3_3, plot_1_3_4])
 showplot()
 
 
